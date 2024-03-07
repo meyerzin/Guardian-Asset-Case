@@ -68,7 +68,7 @@ st.markdown(page_bg_img, unsafe_allow_html=True)
 try: 
     ms = st.session_state
     if "themes" not in ms: 
-        ms.themes = {"current_theme": "light",
+        ms.themes = {"current_theme": "dark",
                         "refreshed": True,
                         
                         "light": {"theme.base": "dark", 
