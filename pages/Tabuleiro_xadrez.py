@@ -4,23 +4,23 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import time
-from functions import *
 import base64
+from functions import *
+
 st.set_page_config(
     layout = 'wide',
     page_title = 'Case GUARDIAN ASSET'
     )
-
 @st.cache_data
 def get_img_as_base64(file):
     with open(file, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
-
+# st.session_state
 img = get_img_as_base64("image.jpg")
-if st.sidebar.checkbox('desabilitar imagens de fundo'):
+if st.sidebar.checkbox('desabilitar imagens de fundo',key='bg_on_off'):
+
     page_bg_img = f"""
     <style>
 
@@ -35,11 +35,11 @@ if st.sidebar.checkbox('desabilitar imagens de fundo'):
     </style>
     """
 else:
-        page_bg_img = f"""
+     page_bg_img = f"""
     <style>
     [data-testid="stAppViewContainer"] > .main {{
     background-image: url("https://media.licdn.com/dms/image/C4D1BAQFph9x17nqZJw/company-background_10000/0/1610146397383/guardian_capital_gestora_de_recursos_s_a_cover?e=1710435600&v=beta&t=nNnbQS1gM2cmj07OC9lOL9QOhSTvjwZCUeappY1SYpo");
-    background-size: 180%;
+    background-size: 100%;
     background-position: top left;
 
     background-attachment: local;
@@ -105,44 +105,97 @@ except:
     pass
 
 ################################
+
+
+
 col1,col2 = st.columns([0.2,0.8])
 with col2:
     st.title('RESOLUÇÃO DO CASE - GUARDIAN-ASSET')
 with col1:
     st.image('https://media.licdn.com/dms/image/C560BAQFoFX4_O4YFjA/company-logo_200_200/0/1630650151370/guardian_capital_gestora_de_recursos_s_a_logo?e=1717632000&v=beta&t=IH8eSlq68yL83p_2Bm1rDeaKEFjjiO10qn-Sw7IhpDo')
+st.header('PARTE 4 - TABULEIRO DE XADREZ',divider='rainbow')
 
-st.title('Banco de dados - SQL')
-with st.expander('objetivos'):
-    st.text('''Utilizando a planilha "Dados Contratos" fornecida para a resolução da Parte 2, quais comando você
-utilizaria em SQL para chegar aos seguintes resultados:
-a. Número total de contratos.
-b. Contratos com um Valor de Parcela maior do que R$ 100.
-c. Selecionar todos os campos da tabela, ordenado pela data de vencimento.
-Utilize o seguinte nome para as colunas:
-Código do Contrato = codigo_contrato
-Número de Parcelas = numero_parcelas
-Valor da Parcela = valor_parcela
-Data de Vencimento = data_vencimento
-Data de Aquisição = data_aquisicao
-ID do Cliente = id_cliente''')
+def criar_e_posicionar_rainhas(n, posicoes_rainhas):
+    '''
+    Args:
+    - n: Tamanho do lado do tabuleiro de xadrez.
+    - posicoes_rainhas: Lista de tuplas, onde cada tupla contém as coordenadas (linha, coluna) para posicionar cada rainha.'''
+
+    tabuleiro = [[' ' for _ in range(n)] for _ in range(n)]
     
-st.header('A) Número total de contratos')
-st.code('''
-SELECT COUNT(*) AS total_contratos
-FROM DadosContratos;        
-''')
+    def marcar_movimentos(linha, coluna):
 
-st.header('B) Contratos que valor de parcela maior do que 100 reais')
+        for i in range(n):
+            # horizontal e vertical
+            tabuleiro[linha][i] = 'X'
+            tabuleiro[i][coluna] = 'X'
+            
+            # diagonais
+            if linha+i < n and coluna+i < n:
+                tabuleiro[linha+i][coluna+i] = 'X'
+            if linha-i >= 0 and coluna+i < n:
+                tabuleiro[linha-i][coluna+i] = 'X'
+            if linha+i < n and coluna-i >= 0:
+                tabuleiro[linha+i][coluna-i] = 'X'
+            if linha-i >= 0 and coluna-i >= 0:
+                tabuleiro[linha-i][coluna-i] = 'X'
+    
+    # Posiciona as rainhas e marca os movimentos
+    for linha, coluna in posicoes_rainhas:
+        marcar_movimentos(linha, coluna)
+        tabuleiro[linha][coluna] = 'Q'  # Marca a posição da rainha
+    
+    return tabuleiro
 
-st.code('''
-SELECT codigo_contrato
-FROM DadosContratos
-WHERE valor_parcela > 100;
-''')
+# Exemplo de uso: criar um tabuleiro 8x8 com duas rainhas
+posicoes_rainhas = []
+n = st.selectbox('selcione a quantidade e lados que o tabuleiro terá:',[i for i in range(16)],0 )
+qtde_rainhas = st.selectbox('selcione a quantidade de rainhas a posicionar:',[i for i in range(16)],0 )
 
-st.header('C) Selecionar todos os campos da tabela por data de vencimento')
-st.code('''
-SELECT *
-FROM DadosContratos
-ORDER BY data_vencimento ASC;
-''')
+for i in range(qtde_rainhas):
+    linha = st.radio(f'POSIÇÃO DA RAINHA {i} (linha)',[i for i in range(n)], horizontal=True)
+    coluna = st.radio(f'POSIÇÃO DA RAINHA {i} (coluna)', [i for i in range(n)],horizontal=True)
+    posicoes_rainhas.append((linha,coluna))
+    st.divider()
+
+if st.checkbox('mostrar tabuleiro'):
+    st.table(criar_e_posicionar_rainhas(n,posicoes_rainhas))
+    tabuleiro_exemplo = criar_e_posicionar_rainhas(n,posicoes_rainhas)
+
+    # if st.button('OPCIONAL: TABULEIRO E XADREZ ESTILIZADO'):   
+        
+
+    #     import matplotlib.pyplot as plt
+    #     import numpy as np
+
+    #     def desenhar_tabuleiro(tabuleiro):
+    #         n = len(tabuleiro)
+    #         tabuleiro_imagem = np.zeros((n, n, 3), dtype=np.uint8)
+
+    #         # Cores
+    #         cor_branca = [255, 255, 255]
+    #         cor_preta = [0, 0, 0]
+    #         cor_rainha = [255, 0, 0]  # Vermelho para a rainha
+    #         cor_acesso = [0, 255, 0]  # Verde para casas acessíveis
+
+    #         # Desenha o tabuleiro
+    #         for i in range(n):
+    #             for j in range(n):
+    #                 if tabuleiro[i][j] == ' ':
+    #                     # Alternar cores das casas
+    #                     if (i + j) % 2 == 0:
+    #                         tabuleiro_imagem[i, j] = cor_branca
+    #                     else:
+    #                         tabuleiro_imagem[i, j] = cor_preta
+    #                 elif tabuleiro[i][j] == 'X':
+    #                     tabuleiro_imagem[i, j] = cor_acesso
+    #                 elif tabuleiro[i][j] == 'Q':
+    #                     tabuleiro_imagem[i, j] = cor_rainha
+
+    #         plt.figure(figsize=(8, 8))
+    #         plt.imshow(tabuleiro_imagem)
+    #         plt.xticks([]), plt.yticks([])  # Esconder os eixos
+    #         # plt.show()
+
+    #     # Usar o tabuleiro de exemplo do passo anterior
+    #     st.pyplot(desenhar_tabuleiro(tabuleiro_exemplo))

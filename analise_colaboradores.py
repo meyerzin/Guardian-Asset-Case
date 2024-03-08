@@ -19,9 +19,8 @@ def get_img_as_base64(file):
 
 
 img = get_img_as_base64("image.jpg")
-if not st.sidebar.checkbox('desabilitar imagens de fundo'):
 
-    page_bg_img = f"""
+page_bg_img = f"""
     <style>
     [data-testid="stAppViewContainer"] > .main {{
     background-image: url("https://media.licdn.com/dms/image/C4D1BAQFph9x17nqZJw/company-background_10000/0/1610146397383/guardian_capital_gestora_de_recursos_s_a_cover?e=1710435600&v=beta&t=nNnbQS1gM2cmj07OC9lOL9QOhSTvjwZCUeappY1SYpo");
@@ -47,7 +46,9 @@ if not st.sidebar.checkbox('desabilitar imagens de fundo'):
     }}
     </style>
     """
-else:
+
+if st.sidebar.checkbox('desabilitar imagens de fundo',key='bg_on_off'):
+
     page_bg_img = f"""
     <style>
 
@@ -61,8 +62,8 @@ else:
     }}
     </style>
     """
-
 st.markdown(page_bg_img, unsafe_allow_html=True)
+# st.session_state
 ########################################################################################################################
 try: 
     ms = st.session_state
@@ -115,33 +116,37 @@ with col1:
 
 escolha = st.selectbox('o que deseja ver',['clique para escolher','pular para a análise','ver construção'])
 if escolha == 'ver construção':
-    page_bg_img = f"""
-    <style>
-    [data-testid="stAppViewContainer"] > .main {{
-    background-image: url("https://media.licdn.com/dms/image/C4D1BAQFph9x17nqZJw/company-background_10000/0/1610146397383/guardian_capital_gestora_de_recursos_s_a_cover?e=1710435600&v=beta&t=nNnbQS1gM2cmj07OC9lOL9QOhSTvjwZCUeappY1SYpo");
-    background-size: 180%;
-    background-position: top left;
+    if st.session_state.bg_on_off:
+        pass
+    else:
 
-    background-attachment: local;
-    }}
+        page_bg_img = f"""
+        <style>
+        [data-testid="stAppViewContainer"] > .main {{
+        background-image: url("https://media.licdn.com/dms/image/C4D1BAQFph9x17nqZJw/company-background_10000/0/1610146397383/guardian_capital_gestora_de_recursos_s_a_cover?e=1710435600&v=beta&t=nNnbQS1gM2cmj07OC9lOL9QOhSTvjwZCUeappY1SYpo");
+        background-size: 180%;
+        background-position: top left;
 
-    [data-testid="stSidebar"] > div:first-child {{
-    background-image: url("data:image/png;base64,{img}");
-    background-position: center; 
+        background-attachment: local;
+        }}
 
-    background-attachment: fixed;
-    }}
+        [data-testid="stSidebar"] > div:first-child {{
+        background-image: url("data:image/png;base64,{img}");
+        background-position: center; 
 
-    [data-testid="stHeader"] {{
-    background: rgba(0,0,0,0);
-    }}
+        background-attachment: fixed;
+        }}
 
-    [data-testid="stToolbar"] {{
-    right: 2rem;
-    }}
-    </style>
-    """
-    st.markdown(page_bg_img, unsafe_allow_html=True)
+        [data-testid="stHeader"] {{
+        background: rgba(0,0,0,0);
+        }}
+
+        [data-testid="stToolbar"] {{
+        right: 2rem;
+        }}
+        </style>
+        """
+        st.markdown(page_bg_img, unsafe_allow_html=True)
     df_cobranca = pd.read_excel('planilhas/Dados Cobranca - Parte 1.xlsx')
     if st.checkbox('VER DATAFRAME COMPLETO'):
         st.dataframe(df_cobranca)
@@ -208,34 +213,38 @@ if escolha == 'ver construção':
     st.dataframe(mes_por_grupo)
 
 if escolha == 'pular para a análise':
-    st.title('VER A ANALISE')
-    page_bg_img = f"""
-    <style>
-    [data-testid="stAppViewContainer"] > .main {{
-    background-image: url("https://media.licdn.com/dms/image/C4D1BAQFph9x17nqZJw/company-background_10000/0/1610146397383/guardian_capital_gestora_de_recursos_s_a_cover?e=1710435600&v=beta&t=nNnbQS1gM2cmj07OC9lOL9QOhSTvjwZCUeappY1SYpo");
-    background-size: 180%;
-    background-position: top left;
 
-    background-attachment: local;
-    }}
+    if st.session_state.bg_on_off:
+        pass
+    else:
 
-    [data-testid="stSidebar"] > div:first-child {{
-    background-image: url("data:image/png;base64,{img}");
-    background-position: center; 
+        page_bg_img = f"""
+        <style>
+        [data-testid="stAppViewContainer"] > .main {{
+        background-image: url("https://media.licdn.com/dms/image/C4D1BAQFph9x17nqZJw/company-background_10000/0/1610146397383/guardian_capital_gestora_de_recursos_s_a_cover?e=1710435600&v=beta&t=nNnbQS1gM2cmj07OC9lOL9QOhSTvjwZCUeappY1SYpo");
+        background-size: 180%;
+        background-position: top left;
 
-    background-attachment: fixed;
-    }}
+        background-attachment: local;
+        }}
 
-    [data-testid="stHeader"] {{
-    background: rgba(0,0,0,0);
-    }}
+        [data-testid="stSidebar"] > div:first-child {{
+        background-image: url("data:image/png;base64,{img}");
+        background-position: center; 
 
-    [data-testid="stToolbar"] {{
-    right: 2rem;
-    }}
-    </style>
-    """
-    st.markdown(page_bg_img, unsafe_allow_html=True)
+        background-attachment: fixed;
+        }}
+
+        [data-testid="stHeader"] {{
+        background: rgba(0,0,0,0);
+        }}
+
+        [data-testid="stToolbar"] {{
+        right: 2rem;
+        }}
+        </style>
+        """
+        st.markdown(page_bg_img, unsafe_allow_html=True)
 
 ######################################################
     df_cobranca = pd.read_excel('planilhas/Dados Cobranca - Parte 1.xlsx')
@@ -262,17 +271,24 @@ if escolha == 'pular para a análise':
 
 
 ######################################################
+    st.header('CONFIGURE SUAS PREFERÊNCIAS')
+    tempo_escrita = st.slider('velocidade de escrita do texto',0.00,0.10,0.04)
+    tempo_pausa = st.slider('tempo de intervalo entre as análises',0,50,10)
+
+    st.title('VER A ANÁLISE')
+
+
     if st.button('conferir analise dos cobradores'):
 
         _LOREM_IPSUM = """
             De primeiro momento, apenas com a leitura do enunciado,
             notamos que a empresa C é a mais barata disparadamente, e a empresa
-            A é a mais cara. Isso nos leva  a alguns pensaentos, do tipo se de fato,
+            A é a mais cara. Isso nos leva  a alguns pensamentos, do tipo se de fato,
             uma empresa que cobra barato tem um bom serviço, ou até melhor, este
             valor cobrado é pelo serviço inteiro, será que a quantidade de empresas 
             ela atendeu foi menor ou de fato ela tem um preço muito mais abaixo do
             mercado de suas concorrentes? Será que ela por cobrar mais barato tem um serviço
-            pior? Será que quanto mais caro, melhor o serviço.
+            pior? Será que quanto mais caro, melhor o serviço..?
 
             Muitas dúvidas surgem ao ver apenas os dados puros, e então, é necessário filtrar 
             os dados para obter alguns insights sobre o que de fato, está acontecendo. 
@@ -284,26 +300,36 @@ if escolha == 'pular para a análise':
         def stream_data():
             for word in _LOREM_IPSUM.split():
                 yield word + " "
-                time.sleep(0.04)
+                time.sleep(tempo_escrita)
 
 
         st.write_stream(stream_data)
         st.header('conferindo média dos pagamentos e afins',divider='rainbow')
         st.dataframe(por_cobrador_media)
         _LOREM_IPSUM = '''
-        Aqui, podemos analisar que o valor MÉDIO das parcelas no grupo C é maior mas
-        tambem, o valor pago no final pelos alunos também é. Fazendo uma analise simples 
+        Aqui, podemos analisar que o valor MÉDIO das parcelas no grupo C é maior, mas
+        por outro lado, o valor pago no final pelos alunos também é. Fazendo uma análise simples 
         com seu concorrente D que tem o mesmo valor médio de valor da parcela,
         pode-senotar que a empresa C ja leva uma vantagem sob a empresa D, pois pode-se
         notar um valor muito inferior das parcelas efetivamente pagas pelos alunos na cobradora D 
-        comparando com a cobradora C. Fazendo a analise geral, observa-se que a empresa C 
+        comparando com a cobradora C. Fazendo a análise geral, observa-se que a empresa C 
         leva vantagem  disparada em eficiência para fazer com que as pessoas de fato 
         paguem a faculdade. Com uma margem de 75,2 % recuperados, ela lidera o melhor lugar 
-        com 15%  de diferença da segunda melhor, que é a B, com 60% em média
+        com 15%  de diferença da segunda melhor, que é a B, com 60% em média.
         
         '''
         st.write_stream(stream_data)
         st.divider()
+        # time.sleep(10)
+########################################
+        progress_text = "tempo de espera..."
+        my_bar = st.progress(0, text=progress_text)
+
+        for percent_complete in range(100):
+            time.sleep(tempo_pausa/100)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+
+########################################
         st.header('Verificando a soma por grupo de cobrador',divider='rainbow')
 
         _LOREM_IPSUM = '''
@@ -342,6 +368,16 @@ if escolha == 'pular para a análise':
             '''
 
         st.write_stream(stream_data)
+        # time.sleep(10)
+########################################
+        progress_text = "tempo de espera..."
+        my_bar = st.progress(0, text=progress_text)
+
+        for percent_complete in range(100):
+            time.sleep(tempo_pausa/100)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+
+########################################
         st.divider()
         st.header('ainda há outras possiveis analises a se fazer',divider='rainbow')
 
@@ -361,7 +397,15 @@ if escolha == 'pular para a análise':
             st.dataframe(((df_cobranca.loc[df_cobranca['Valor Pago'] == 0])['Cobrador'].value_counts() / df_cobranca['Cobrador'].value_counts() * 100),use_container_width=True)
 
         st.divider()
+########################################
+        progress_text = "tempo de espera..."
+        my_bar = st.progress(0, text=progress_text)
 
+        for percent_complete in range(100):
+            time.sleep(tempo_pausa/100)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+
+########################################
         st.header('Eficiência vs Prazo de tempo',divider='rainbow')
 
         _LOREM_IPSUM = '''
@@ -383,7 +427,16 @@ if escolha == 'pular para a análise':
 
             mes_por_grupo = df_cobranca.groupby('Cobrador')['tempo_pgto'].mean().dt.days.apply(lambda x : f'{x} dias')
             st.dataframe(mes_por_grupo)
+        # time.sleep(10)
+########################################
+        progress_text = "tempo de espera..."
+        my_bar = st.progress(0, text=progress_text)
 
+        for percent_complete in range(100):
+            time.sleep(tempo_pausa/100)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+
+########################################
         st.divider()
 
         st.header('O ULTIMO PONTO DE VISTA: analisando sem considerar os zeramentos',divider='rainbow')
@@ -427,6 +480,16 @@ if escolha == 'pular para a análise':
             '''
 
         st.write_stream(stream_data)
+        # time.sleep(10)
+########################################
+        progress_text = "tempo de espera..."
+        my_bar = st.progress(0, text=progress_text)
+
+        for percent_complete in range(100):
+            time.sleep(tempo_pausa/100)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+
+########################################
         st.divider()
 
         st.title('CONCLUSÕES FINAIS')

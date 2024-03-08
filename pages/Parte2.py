@@ -17,11 +17,25 @@ def get_img_as_base64(file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-
+# st.session_state
 img = get_img_as_base64("image.jpg")
-if not st.sidebar.checkbox('desabilitar imagens de fundo'):
+if st.sidebar.checkbox('desabilitar imagens de fundo',key='bg_on_off'):
 
     page_bg_img = f"""
+    <style>
+
+
+    [data-testid="stHeader"] {{
+    background: rgba(0,0,0,0);
+    }}
+
+    [data-testid="stToolbar"] {{
+    right: 2rem;
+    }}
+    </style>
+    """
+else:
+     page_bg_img = f"""
     <style>
     [data-testid="stAppViewContainer"] > .main {{
     background-image: url("https://media.licdn.com/dms/image/C4D1BAQFph9x17nqZJw/company-background_10000/0/1610146397383/guardian_capital_gestora_de_recursos_s_a_cover?e=1710435600&v=beta&t=nNnbQS1gM2cmj07OC9lOL9QOhSTvjwZCUeappY1SYpo");
@@ -47,21 +61,6 @@ if not st.sidebar.checkbox('desabilitar imagens de fundo'):
     }}
     </style>
     """
-else:
-    page_bg_img = f"""
-    <style>
-
-
-    [data-testid="stHeader"] {{
-    background: rgba(0,0,0,0);
-    }}
-
-    [data-testid="stToolbar"] {{
-    right: 2rem;
-    }}
-    </style>
-    """
-
 st.markdown(page_bg_img, unsafe_allow_html=True)
 ########################################################################################################################
 try: 
